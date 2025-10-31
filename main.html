@@ -1,31 +1,123 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Form</title>
+  <style>
+    /* Optional basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      padding: 8px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    input[type="submit"],
+    button#existing {
+      padding: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button#existing.hidden {
+      display: none;
+    }
+    label {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
 </head>
-
 <body>
-	<center>
-	 <h1>Login Form</h1>
+
+  <h1>Login Form</h1>
 
   <form id="loginForm">
+    <label for="username">Username:</label>
     <input type="text" id="username" placeholder="Username" autocomplete="username" />
-	  <br> <br/>	  
+
+    <label for="password">Password:</label>
     <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-	  <br> <br/>
-    <label><input type="checkbox" id="checkbox" /> Remember me.</label>
-	  <br> <br/>
+
+    <label for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      Remember me.
+    </label>
+
     <input type="submit" id="submit" value="Submit" />
-	  <br> <br/>
   </form>
 
   <button id="existing" class="hidden">Login as existing user</button>
-		</center>
-    <script type="text/javascript" src="./script.js">
-</script>
+
+  <script>
+    // Select elements
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberCheckbox = document.getElementById('checkbox');
+    const existingBtn = document.getElementById('existing');
+    const loginForm = document.getElementById('loginForm');
+
+    // On page load, check localStorage for saved credentials
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedUsername = localStorage.getItem('username');
+      const savedPassword = localStorage.getItem('password');
+
+      if (savedUsername && savedPassword) {
+        existingBtn.classList.remove('hidden');
+      } else {
+        existingBtn.classList.add('hidden');
+      }
+
+      // Clear form fields and checkbox
+      usernameInput.value = '';
+      passwordInput.value = '';
+      rememberCheckbox.checked = false;
+    });
+
+    // Form submit handler
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+
+      alert(`Logged in as ${username}`);
+
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+        existingBtn.classList.remove('hidden');
+      } else {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        existingBtn.classList.add('hidden');
+      }
+
+      // Clear password after submission for security
+      passwordInput.value = '';
+    });
+
+    // Existing user login button click handler
+    existingBtn.addEventListener('click', () => {
+      const savedUsername = localStorage.getItem('username');
+      if (savedUsername) {
+        alert(`Logged in as ${savedUsername}`);
+      }
+    });
+  </script>
 
 </body>
-
 </html>
